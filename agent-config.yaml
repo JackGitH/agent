@@ -1,0 +1,91 @@
+# Agent Cluster System Configuration
+# 基于 OpenClaw + Claude Code 架构
+
+# ============== 基础配置 ==============
+WORKSPACE_ROOT: /workspace/agent
+BASE_BRANCH: main
+
+# ============== Agent 配置 ==============
+AGENTS:
+  codex:
+    enabled: true
+    model: gpt-5.3-codex
+    priority: 90
+    use_case: 后端逻辑、复杂bug、多文件重构
+    
+  claude:
+    enabled: true
+    model: claude-opus-4.5
+    priority: 80
+    use_case: 前端工作、权限问题少
+    
+  glm:
+    enabled: true
+    model: glm-5
+    priority: 70
+    use_case: 中文任务
+
+# ============== 任务配置 ==============
+TASK:
+  # 自动选择 Agent 策略
+  auto_select_agent: true
+  
+  # 最大并行任务数
+  max_parallel_tasks: 4
+  
+  # 最大重试次数
+  max_retries: 3
+  
+  # 任务超时时间 (小时)
+  timeout_hours: 24
+
+# ============== Git 配置 ==============
+GIT:
+  # 自动创建 worktree
+  auto_worktree: true
+  
+  # worktree 根目录
+  worktree_root: .agent-cluster/worktrees
+  
+  # 自动清理孤立 worktree
+  auto_cleanup: true
+
+# ============== 监控配置 ==============
+MONITOR:
+  # 启用 cron 监控
+  enabled: true
+  
+  # 检查间隔 (分钟)
+  check_interval: 10
+  
+  # 日志目录
+  log_dir: .agent-cluster/logs
+
+# ============== CI/CD 配置 ==============
+CI:
+  # 需要通过的检查
+  required_checks:
+    - lint
+    - type_check
+    - unit_tests
+    - e2e_tests
+  
+  # UI 变更需要截图
+  require_screenshot: true
+
+# ============== 通知配置 ==============
+NOTIFY:
+  # 启用通知
+  enabled: true
+  
+  # 通知渠道 (telegram, discord, feishu, webhook)
+  channels:
+    - telegram
+  
+  # 通知事件
+  events:
+    - task_started
+    - task_completed
+    - task_failed
+    - ci_passed
+    - ci_failed
